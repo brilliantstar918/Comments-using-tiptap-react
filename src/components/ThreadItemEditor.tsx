@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { ThreadItem } from '../types';
 import { Avatar } from './Avatar';
@@ -11,7 +11,9 @@ interface ThreadItemEditorProps {
   onEnter: (id: string) => void;
   onBackspace: (id: string) => void;
   onSelectAll: (id: string) => void;
+  onDeleteSelected: () => void;
   isSelected: boolean;
+  onRegisterEditor: (editor: Editor | null) => void;
 }
 
 export const ThreadItemEditor: React.FC<ThreadItemEditorProps> = ({
@@ -21,7 +23,9 @@ export const ThreadItemEditor: React.FC<ThreadItemEditorProps> = ({
   onEnter,
   onBackspace,
   onSelectAll,
+  onDeleteSelected,
   isSelected,
+  onRegisterEditor,
 }) => {
   const lastEnterPress = useRef<number>(0);
   const DOUBLE_ENTER_THRESHOLD = 500; // milliseconds
@@ -64,14 +68,17 @@ export const ThreadItemEditor: React.FC<ThreadItemEditorProps> = ({
           return true;
         }
 
+        // Handle Backspace for selected items
+        if (event.key === 'Backspace' && isSelected) {
+          event.preventDefault();
+          onDeleteSelected();
+          return true;
+        }
+
         // Handle Select All (Ctrl/Cmd + A)
         if ((event.ctrlKey || event.metaKey) && event.key === 'a') {
           event.preventDefault();
-          if (isSelected) {
-            onSelectAll(item.id);
-          } else {
-            editor?.commands.selectAll();
-          }
+          onSelectAll(item.id);
           return true;
         }
 
@@ -79,6 +86,12 @@ export const ThreadItemEditor: React.FC<ThreadItemEditorProps> = ({
       },
     },
   });
+
+  // Register editor instance
+  useEffect(() => {
+    onRegisterEditor(editor);
+    return () => onRegisterEditor(null);
+  }, [editor, onRegisterEditor]);
 
   // Update selection state
   useEffect(() => {
