@@ -21,7 +21,7 @@ export const ThreadEditor: React.FC = () => {
   // Keep track of editor instances
   const editorsRef = useRef<{ [key: string]: Editor | null }>({});
   const lastCtrlATime = useRef<number>(0);
-  const CTRL_A_THRESHOLD = 300;
+  const CTRL_A_THRESHOLD = 500;
 
   const handleUpdate = (id: string, content: string) => {
     setThreadItems((prev) =>
@@ -84,11 +84,10 @@ export const ThreadEditor: React.FC = () => {
   const handleSelectAll = (id: string) => {
     const currentTime = Date.now();
     setSelectedItems(new Set(threadItems.map(item => item.id)));
-    if (selectedItems.has(id)) {
-      // If current item is already selected and within threshold, select all
-      if (currentTime - lastCtrlATime.current <= CTRL_A_THRESHOLD) {
-        setSelectedItems(new Set(threadItems.map(item => item.id)));
-      }
+
+    // If current item is already selected and within threshold, select all
+    if (currentTime - lastCtrlATime.current <= CTRL_A_THRESHOLD) {
+      setSelectedItems(new Set(threadItems.map(item => item.id)));
     } else {
       // First Ctrl+A: select only current item
       setSelectedItems(new Set([id]));
@@ -129,8 +128,6 @@ export const ThreadEditor: React.FC = () => {
       }, 0);
     }
   };
-
-  console.log(selectedItems)
 
   return (
     <div className="max-w-2xl mx-auto space-y-4">
