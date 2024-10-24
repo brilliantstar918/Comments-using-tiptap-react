@@ -1,0 +1,105 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Thread Editor Styles */
+.ProseMirror {
+  @apply outline-none min-h-[24px] w-full;
+}
+
+.ProseMirror p {
+  @apply my-1;
+}
+
+.selected .ProseMirror {
+  @apply bg-blue-50;
+}
+
+/* Thread Spacing and Animation */
+.thread-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.2s ease-in-out;
+}
+
+.thread-item-new {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Thread Container Styles */
+.thread-container {
+  @apply max-w-2xl mx-auto space-y-4;
+}
+
+/* Thread Item Styles */
+.thread-item {
+  @apply bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200;
+}
+
+.thread-content {
+  @apply p-4;
+}
+
+.thread-divider {
+  @apply border-b border-gray-100;
+}
+
+/* Hover Effects */
+.thread-item:hover {
+  @apply bg-gray-50;
+}
+
+/* Selection Styles */
+.thread-selected {
+  @apply ring-2 ring-blue-500 ring-opacity-50;
+}
